@@ -109,6 +109,23 @@ public class Game : GameWindow
         if (KeyboardState.IsKeyDown(Keys.Up))    sel.Transform.Position.Y += moveSpeed * dt;
 
         // TODO (T2): Q / E rotesc obiectul, Z / X îl scalează
+        //Scalarea se face prin înmulțire pentru că este o multiplicare proporțională a dimensiunilor, ceea ce păstrează forma obiectului fără să îl deformeze.
+        float speedMultiplier = KeyboardState.IsKeyDown(Keys.LeftShift) ? 3.0f : 1.0f;
+        float rotationSpeed = 90.0f * dt * speedMultiplier;
+
+        if (KeyboardState.IsKeyDown(Keys.Q)) sel.Transform.Rotation += rotationSpeed;
+        if (KeyboardState.IsKeyDown(Keys.E)) sel.Transform.Rotation -= rotationSpeed;
+
+        float scaleFactor = MathF.Pow(1.5f, dt * speedMultiplier);
+        if (KeyboardState.IsKeyDown(Keys.Z))
+        {
+            sel.Transform.Scale = Vector2.Clamp(sel.Transform.Scale / scaleFactor, new Vector2(0.1f), new Vector2(10.0f));
+        }
+        if (KeyboardState.IsKeyDown(Keys.X))
+        {
+            sel.Transform.Scale = Vector2.Clamp(sel.Transform.Scale * scaleFactor, new Vector2(0.1f), new Vector2(10.0f));
+        }
+
 
         if (KeyboardState.IsKeyPressed(Keys.Tab)) _selected = (_selected + 1) % _scene.Count;
         if (KeyboardState.IsKeyPressed(Keys.O))   _camera.IsPerspective = !_camera.IsPerspective;
