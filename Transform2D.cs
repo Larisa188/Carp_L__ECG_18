@@ -13,9 +13,19 @@ public class Transform2D
     public Vector2 Scale = Vector2.One;       // factorii de scalare pe x și pe y
     public float Depth = 0.0f;                // coordonata z; contează doar în perspectivă (secțiunea 7.2)
 
-    public Matrix4 ModelMatrix =>
-        // TODO (T1): scalare, apoi rotație, apoi translație
-        Matrix4.CreateTranslation(Position.X, Position.Y, Depth);
+    public Matrix4 ModelMatrix {
+        get
+        {
+            // TODO (T1)
+            //Daca translatia ar fi aplicata inaintea rotatiei, obiectul s-ar roti in jurul originii (0,0) si nu in jurul pozitiei sale.
+            var translationMatrix = Matrix4.CreateTranslation(new Vector3(Position.X, Position.Y, Depth));
+            var rotationMatrix = Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(Rotation));
+            var scaleMatrix = Matrix4.CreateScale(new Vector3(Scale.X, Scale.Y, 1.0f));
+            // Combinăm transformările: scalare, apoi rotație, apoi translație
+            return scaleMatrix * rotationMatrix * translationMatrix;
+        }
+    }
+      
 
     /// <summary>O copie independentă (folosită pentru readucerea scenei în starea inițială).</summary>
     public Transform2D Clone() => (Transform2D)MemberwiseClone();
