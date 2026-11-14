@@ -71,6 +71,11 @@ public class FpsCamera : Camera
 
         // TODO 5.1 (c): rotița în sus (ScrollDelta.Y > 0) micșorează FOV-ul (efect de zoom)
         //               (folosiți ChangeFov din clasa Camera și FovStep)
+        Yaw += mouseDelta.X * MouseSensitivity;
+        Pitch -= mouseDelta.Y * MouseSensitivity;
+        Pitch = Math.Clamp(Pitch, -MaxPitch, MaxPitch);
+
+        UpdateVectors();
         if (mouse.ScrollDelta.Y != 0)
         {
             ChangeFov(-mouse.ScrollDelta.Y * FovStep);
@@ -95,9 +100,16 @@ public class FpsCamera : Camera
         // TODO 5.5 (b): Front din yaw și pitch (formula din secțiunea 5.2), apoi Right și Up
         //               prin produse vectoriale; toți trei normalizați.
         //               Până atunci camera privește mereu spre -Z.
-        _front = -Vector3.UnitZ;
-        _right = Vector3.UnitX;
-        _up = Vector3.UnitY;
+        float yawRad = MathHelper.DegreesToRadians(Yaw);
+        float pitchRad = MathHelper.DegreesToRadians(Pitch);
+
+        _front.X = MathF.Cos(pitchRad) * MathF.Cos(yawRad);
+        _front.Y = MathF.Sin(pitchRad);
+        _front.Z = MathF.Cos(pitchRad) * MathF.Sin(yawRad);
+        _front = Vector3.Normalize(_front);
+
+        _right = Vector3.Normalize(Vector3.Cross(_front, WorldUp));
+        _up = Vector3.Normalize(Vector3.Cross(_right, _front));
     }
 
     public override void Reset()
