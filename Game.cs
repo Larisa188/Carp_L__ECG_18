@@ -38,6 +38,7 @@ public class Game : GameWindow
     private int _frames, _lastFrames;
     private bool _titleDirty = true;
 
+
     public Game(int width, int height, string title)
         : base(GameWindowSettings.Default,
                new NativeWindowSettings
@@ -260,7 +261,10 @@ public class Game : GameWindow
         // 1. Ștergem imaginea veche: bufferul de culoare și bufferul de adâncime.
         GL.ClearColor(0.12f, 0.14f, 0.18f, 1.0f);
         // TODO 5.2: ștergerea bufferului de adâncime la fiecare cadru
-        GL.Clear(ClearBufferMask.ColorBufferBit);
+        //Imaginea se strica deoarece bufferul de adancime nu este sters la fiecare cadru, astfel ca obiectele care sunt mai aproape de camera nu sunt desenate corect.
+     
+        GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+       
 
         // 2. Starea de rasterizare.
         SetCapability(EnableCap.DepthTest, _depthTest);   // fragmentul mai apropiat câștigă

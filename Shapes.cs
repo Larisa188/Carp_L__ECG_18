@@ -127,7 +127,25 @@ public static class Shapes
 
         // TODO 5.3: fețele 2..5. Pentru fiecare față, imaginați-vă că o priviți din afara cubului
         //           și stabiliți direcțiile "dreapta" și "sus" (ca în comentariile de mai sus).
+        // Fața 2: -X (stânga). Privită din -X: dreapta = +Z, sus = +Y.
+        AddFace(vertices, indices, 2,
+                new Vector3(-h, -h, -h), new Vector3(-h, -h, h), new Vector3(-h, h, h), new Vector3(-h, h, -h),
+                new Color4(0.0f, 1.0f, 1.0f, 1.0f)); // Cyan (-X)
 
+        // Fața 3: -Z (spate). Privită din -Z: dreapta = -X, sus = +Y.
+        AddFace(vertices, indices, 3,
+                new Vector3(h, -h, -h), new Vector3(-h, -h, -h), new Vector3(-h, h, -h), new Vector3(h, h, -h),
+                new Color4(1.0f, 1.0f, 0.0f, 1.0f)); // Galben (-Z)
+
+        // Fața 4: +Y (sus). Privită de sus: dreapta = +X, sus = -Z.
+        AddFace(vertices, indices, 4,
+                new Vector3(-h, h, h), new Vector3(h, h, h), new Vector3(h, h, -h), new Vector3(-h, h, -h),
+                new Color4(0.2f, 1.0f, 0.2f, 1.0f)); // Verde (+Y)
+
+        // Fața 5: -Y (jos). Privită de jos: dreapta = +X, sus = +Z.
+        AddFace(vertices, indices, 5,
+                new Vector3(-h, -h, -h), new Vector3(h, -h, -h), new Vector3(h, -h, h), new Vector3(-h, -h, h),
+                new Color4(1.0f, 0.0f, 1.0f, 1.0f)); // Magenta (-Y)
         return new Mesh(vertices, indices);
     }
 
