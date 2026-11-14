@@ -62,11 +62,27 @@ public sealed class PlayerController
 
         // 2. Saltul încărcat: apăsare -> ținere -> eliberare.
         // TODO 6.5:
+        // deoarece este un salt incarcat, WasReales detecteaza momentul in care ridicam degetul pe tasta pentru a declansa lansarea o singura data cu puterea acumulata
+        // in timp ce !IsDown este adevarat continuu ori de cate ori tasta este eliberata
         //   (a) pe sol, la APĂSAREA acțiunii Jump: _charging = true și _charge = 0;
+        if (OnGround && input.WasPressed(Actions.Jump))
+        {
+            _charging = true;
+            _charge = 0.0f;
+        }
         //   (b) cât timp _charging și acțiunea este ȚINUTĂ: _charge crește cu dt / ChargeTime, cel mult 1;
+        if (_charging && input.IsDown(Actions.Jump))
+        {
+            _charge = MathF.Min(_charge + dt / ChargeTime, 1.0f);
+        }
         //   (c) la ELIBERARE (dacă _charging): _verticalSpeed = Lerp(MinJumpSpeed, MaxJumpSpeed, _charge),
         //       apoi _charging = false și _charge = 0.
-
+        if (_charging && input.WasReleased(Actions.Jump))
+        {
+            _verticalSpeed = Easing.Lerp(MinJumpSpeed, MaxJumpSpeed, _charge);
+            _charging = false;
+            _charge = 0.0f;
+        }
 
 
         // 3. Gravitația (metoda Euler semi-implicită): întâi viteza, apoi poziția.
