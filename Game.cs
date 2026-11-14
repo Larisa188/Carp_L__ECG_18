@@ -38,6 +38,7 @@ public class Game : GameWindow
     private int _frames, _lastFrames;
     private bool _titleDirty = true;
 
+    private readonly OrbitCamera _orbit = new();
 
     public Game(int width, int height, string title)
         : base(GameWindowSettings.Default,
@@ -147,6 +148,7 @@ public class Game : GameWindow
         GL.Viewport(0, 0, e.Width, e.Height);
         _fps.Resize(e.Width, e.Height);     // proiecția se adaptează la noul raport de aspect
         // TEMA: și camera orbită trebuie să afle noul raport de aspect
+        _orbit.Resize(e.Width, e.Height);
         _titleDirty = true;
     }
 
@@ -242,7 +244,24 @@ public class Game : GameWindow
         // TEMA: tasta V comută între camera FPS și camera orbită (vezi textul laboratorului).
         if (kb.IsKeyPressed(Keys.V))
         {
-            ConsolePanel.PrintMessage("camera orbită nu este încă implementată (tema)");
+            if (_active == _fps)
+            {
+                _active = _orbit;
+                CursorState = CursorState.Normal; 
+            }
+            else
+            {
+                _active = _fps;
+                CursorState = CursorState.Grabbed; 
+            }
+            _ignoreMouseOnce = true;
+            ConsolePanel.PrintMessage($"mod camera: {_active.Name}");
+            _titleDirty = true;
+        }
+        if (kb.IsKeyPressed(Keys.V))
+        {
+            ConsolePanel.PrintMessage($"mod camera: {_active.Name}");
+            _titleDirty = true;
         }
     }
 
